@@ -35,7 +35,21 @@ public class Christofides {
         }
         System.out.println("---------------------");
 
+        // find minimum weight perfect matching
+        List<Edge> matching = graphUtils.getMinimumWeightPerfectMatching(oddDegreeNodes);
+        for(Edge e: matching){
+            System.out.println("edge u and v: " + e.u + " - " + e.v);
+        }
 
+
+        // combine mst and matching
+        List<Edge> euler = graphUtils.createMultigraph(mst, matching);
+        //print euler
+        System.out.println("Euler:");
+        for(int i = 0; i < euler.size(); i++) {
+            System.out.println(euler.get(i).getU() + " " + euler.get(i).getV() + " ");
+        }
+        System.out.println("---------------------");
     }
     public List<City> getTour() {
         return tour;

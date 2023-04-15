@@ -20,10 +20,10 @@ public class Graph {
     }
 
     private double distance(City c1, City c2) {
-        double lat1 = Math.toRadians(c1.lat);
-        double lat2 = Math.toRadians(c2.lat);
-        double lon1 = Math.toRadians(c1.lon);
-        double lon2 = Math.toRadians(c2.lon);
+        double lat1 = Math.toRadians(c1.getLattitude());
+        double lat2 = Math.toRadians(c2.getLattitude());
+        double lon1 = Math.toRadians(c1.getLongitude());
+        double lon2 = Math.toRadians(c2.getLongitude());
         double dlon = lon2 - lon1;
         double dlat = lat2 - lat1;
         double a = Math.pow(Math.sin(dlat / 2), 2)
