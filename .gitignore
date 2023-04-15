@@ -23,10 +23,10 @@
 hs_err_pid*
 
 #target folder
-TSP/target/
+com.info6205.TSP.TSP/target/
 
 #.idea folder
-TSP/.idea/
+com.info6205.TSP.TSP/.idea/
 .idea/
 
 #.DS_store file
