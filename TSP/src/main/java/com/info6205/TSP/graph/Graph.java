@@ -14,23 +14,25 @@ public class Graph {
             adjacencyMatrix.add(new ArrayList<>());
             for (int j = 0; j < cities.size(); j++) {
                 adjacencyMatrix.get(i).add(distance(cities.get(i), cities.get(j)));
-                System.out.println("Distance from " + i + " to " + j + " is " + adjacencyMatrix.get(i).get(j));
+//                System.out.println("Distance from " + i + " to " + j + " is " + adjacencyMatrix.get(i).get(j));
             }
         }
     }
 
-    private double distance(City c1, City c2) {
-        double lat1 = Math.toRadians(c1.getLattitude());
-        double lat2 = Math.toRadians(c2.getLattitude());
-        double lon1 = Math.toRadians(c1.getLongitude());
-        double lon2 = Math.toRadians(c2.getLongitude());
-        double dlon = lon2 - lon1;
-        double dlat = lat2 - lat1;
-        double a = Math.pow(Math.sin(dlat / 2), 2)
-                + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+    public double distance(City c1, City c2) {
+        double lat1 = c1.getLattitude();
+        double lon1 = c1.getLongitude();
+        double lat2 = c2.getLattitude();
+        double lon2 = c2.getLongitude();
+        double earthRadius = 6371000; // meters
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double radius = 6371000; // radius of earth in kilometers
-        return radius * c;
+        double distance = earthRadius * c;
+        return distance;
     }
 
     public double getDistance(int i, int j) {

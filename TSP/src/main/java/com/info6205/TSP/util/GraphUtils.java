@@ -16,6 +16,8 @@ public class GraphUtils {
         this.graph = graph;
     }
 
+    //Kruskal's Algo
+
     public List<Edge> getMinimumSpanningTree() {
         List<Edge> edges = new ArrayList<>();
         for (int i = 0; i < graph.size(); i++) {
@@ -36,6 +38,42 @@ public class GraphUtils {
         }
         return mst;
     }
+
+
+    //Prim's Algorithm
+    /*
+    public List<Edge> getMinimumSpanningTree() {
+        List<Edge> mst = new ArrayList<>();
+        boolean[] visited = new boolean[graph.size()];
+        double[] distTo = new double[graph.size()];
+        int[] parent = new int[graph.size()];
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(i -> distTo[i]));
+        Arrays.fill(distTo, Double.POSITIVE_INFINITY);
+        distTo[0] = 0.0;
+        pq.offer(0);
+
+        while (!pq.isEmpty()) {
+            int u = pq.poll();
+            visited[u] = true;
+            for (int v = 0; v < graph.size(); v++) {
+                if (u != v && !visited[v]) {
+                    double weight = graph.getDistance(u, v);
+                    if (weight < distTo[v]) {
+                        distTo[v] = weight;
+                        parent[v] = u;
+                        pq.offer(v);
+                    }
+                }
+            }
+        }
+
+        for (int i = 1; i < graph.size(); i++) {
+            mst.add(new Edge(i, parent[i], graph.getDistance(i, parent[i])));
+        }
+
+        return mst;
+    }
+    */
 
     public List<Integer> getOddDegreeNodes(List<Edge> mst) {
         // Use the countEdges() method to get a HashMap of the number of incident edges for each city
@@ -101,19 +139,41 @@ public class GraphUtils {
         return edges;
     }
 
-    public List<Integer> findEulerianCircuit(List<Edge> euler){
+    public List<Integer> findEulerianCircuit(List<Edge> euler) {
+        // Create a map to hold the list of neighbors for each vertex
+        Map<Integer, List<Integer>> neighbors = new HashMap<>();
+        for (Edge edge : euler) {
+            int u = edge.getU();
+            int v = edge.getV();
+            neighbors.computeIfAbsent(u, k -> new ArrayList<>()).add(v);
+            neighbors.computeIfAbsent(v, k -> new ArrayList<>()).add(u);
+        }
 
-        List<Integer> visited = new ArrayList<>(); // visited [8, 9, ]
-        List<Integer> circuit = new ArrayList<>(); //temp [8, 12, 14, ]
-        circuit.add(euler.get(0).u); // a-b b-c c-d
-        for (Edge e : euler) { //a-b, b-c
-            if (!visited.contains(e.v)) {
-//                temp.add(e.u);
-                circuit.add(e.v);
-//                path.add();
-                visited.add(e.u);
+        // Find an arbitrary start vertex
+        int start = euler.get(0).getU();
+
+        // Initialize a stack with the start vertex
+        Stack<Integer> stack = new Stack<>();
+        stack.push(start);
+
+        // Initialize the circuit
+        List<Integer> circuit = new ArrayList<>();
+
+        while (!stack.isEmpty()) {
+            int u = stack.peek();
+            if (neighbors.containsKey(u) && !neighbors.get(u).isEmpty()) {
+                // Visit the next neighbor of u
+                int v = neighbors.get(u).remove(0);
+                neighbors.get(v).remove(new Integer(u));
+                stack.push(v);
+            } else {
+                // Remove u from the stack and add it to the circuit
+                circuit.add(stack.pop());
             }
         }
+
+        // Reverse the circuit to get the correct order
+        Collections.reverse(circuit);
 
         return circuit;
     }

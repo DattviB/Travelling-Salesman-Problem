@@ -37,26 +37,29 @@ public class Christofides {
 
         // find minimum weight perfect matching
         List<Edge> matching = graphUtils.getMinimumWeightPerfectMatching(oddDegreeNodes);
-        for(Edge e: matching){
-            System.out.println("edge u and v: " + e.u + " - " + e.v);
+        System.out.println("Matching:");
+        for(Edge e: matching) {
+            System.out.println(e.getU() + "--" + e.getV());
         }
+        System.out.println("---------------------");
 
 
         // combine mst and matching
         List<Edge> euler = graphUtils.createMultigraph(mst, matching);
-        //print euler
-        System.out.println("Euler:");
-        for(int i = 0; i < euler.size(); i++) {
-            System.out.println(euler.get(i).getU() + " " + euler.get(i).getV() + " ");
+        System.out.println("Multigraph:");
+        for(Edge e: euler) {
+            System.out.println(e.getU() + "--" + e.getV());
         }
         System.out.println("---------------------");
 
         // find euler tour
         List<Integer> eulerianCircuit = graphUtils.findEulerianCircuit(euler);
-        System.out.println("temp: " + eulerianCircuit);
+        System.out.println("Eulerian Circuit: " + eulerianCircuit);
 
         // convert euler tour to hamiltonian tour
         this.tour = graphUtils.convertToHamiltonTour(eulerianCircuit);
+//        for(City c: tour)
+//            System.out.println("Tour: " + c.getId());
     }
     public List<City> getTour() {
         return tour;
