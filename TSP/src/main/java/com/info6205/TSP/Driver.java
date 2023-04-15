@@ -65,10 +65,12 @@ public class Driver {
 
         Christofides christofides = new Christofides(cities);
         christofides.findTour();
+        List<City> tour = christofides.getTour();
+        for (City city : tour) {
+            System.out.println(city.id + " " + city.longitude + " " + city.longitude);
+        }
 
-        System.out.println("Graph created for cities");
-
-        ViewTSPAlgo view = new ViewTSPAlgo();
+        ViewTSPAlgo view =  new ViewTSPAlgo(tour);
         view.setVisible(true);
 
     }
