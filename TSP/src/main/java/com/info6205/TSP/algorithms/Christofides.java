@@ -25,6 +25,17 @@ public class Christofides {
             System.out.println(mst.get(i).getU() + " " + mst.get(i).getV() + " ");
         }
         System.out.println("---------------------");
+
+
+        // find odd degree vertices
+        List<Integer> oddDegreeNodes = graphUtils.getOddDegreeNodes(mst);
+        System.out.println("Odd degree vertices:");
+        for(int i = 0; i < oddDegreeNodes.size(); i++) {
+            System.out.println(oddDegreeNodes.get(i));
+        }
+        System.out.println("---------------------");
+
+
     }
     public List<City> getTour() {
         return tour;

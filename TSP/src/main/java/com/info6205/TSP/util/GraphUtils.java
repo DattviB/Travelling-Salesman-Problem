@@ -37,4 +37,38 @@ public class GraphUtils {
         return mst;
     }
 
+    public List<Integer> getOddDegreeNodes(List<Edge> mst) {
+        // Use the countEdges() method to get a HashMap of the number of incident edges for each city
+        Map<Integer, Integer> edgeCounts = countEdges(mst);
+        // Create an empty list to store the indices of vertices with an odd degree
+        List<Integer> odd = new ArrayList<>();
+        // Loop over all the vertices in the graph
+        for (int i = 0; i < graph.size(); i++) {
+            // If the number of incident edges for the current vertex is odd,
+            // add its index to the list of vertices with an odd degree
+            if (edgeCounts.get(i) % 2 == 1) {
+                odd.add(i);
+            }
+        }
+        // Return the list of indices of vertices with an odd degree
+        return odd;
+    }
+
+
+    public Map<Integer, Integer> countEdges(List<Edge> mst) {
+        // Create a new HashMap to store the number of incident edges for each city
+        Map<Integer, Integer> edgeCounts = new HashMap<>();
+        // Initialize all the edge counts to zero
+        for (int i = 0; i < graph.size(); i++) {
+            edgeCounts.put(i, 0);
+        }
+        // Loop over all the edges in the MST
+        for (Edge edge : mst) {
+            // Increment the edge counts for the two vertices in the current edge
+            edgeCounts.put(edge.u, edgeCounts.get(edge.u) + 1);
+            edgeCounts.put(edge.v, edgeCounts.get(edge.v) + 1);
+        }
+        // Return the HashMap of edge counts
+        return edgeCounts;
+    }
 }
