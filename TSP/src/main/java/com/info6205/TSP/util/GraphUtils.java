@@ -101,4 +101,30 @@ public class GraphUtils {
         return edges;
     }
 
+    public List<Integer> findEulerianCircuit(List<Edge> euler){
+
+        List<Integer> visited = new ArrayList<>(); // visited [8, 9, ]
+        List<Integer> circuit = new ArrayList<>(); //temp [8, 12, 14, ]
+        circuit.add(euler.get(0).u); // a-b b-c c-d
+        for (Edge e : euler) { //a-b, b-c
+            if (!visited.contains(e.v)) {
+//                temp.add(e.u);
+                circuit.add(e.v);
+//                path.add();
+                visited.add(e.u);
+            }
+        }
+
+        return circuit;
+    }
+
+
+    public List<City> convertToHamiltonTour(List<Integer> tour) {
+        List<City> cities = new ArrayList<>();
+        for (int i = 0; i < tour.size(); i++) {
+            cities.add(graph.getCities().get(tour.get(i)));
+        }
+        return cities;
+    }
+
 }

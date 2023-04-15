@@ -50,6 +50,13 @@ public class Christofides {
             System.out.println(euler.get(i).getU() + " " + euler.get(i).getV() + " ");
         }
         System.out.println("---------------------");
+
+        // find euler tour
+        List<Integer> eulerianCircuit = graphUtils.findEulerianCircuit(euler);
+        System.out.println("temp: " + eulerianCircuit);
+
+        // convert euler tour to hamiltonian tour
+        this.tour = graphUtils.convertToHamiltonTour(eulerianCircuit);
     }
     public List<City> getTour() {
         return tour;
