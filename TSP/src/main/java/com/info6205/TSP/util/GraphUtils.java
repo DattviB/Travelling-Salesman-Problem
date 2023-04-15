@@ -71,4 +71,34 @@ public class GraphUtils {
         // Return the HashMap of edge counts
         return edgeCounts;
     }
+
+
+    public List<Edge> getMinimumWeightPerfectMatching(List<Integer> odd) {
+        List<Edge> edges = new ArrayList<>();
+        for (int i = 0; i < odd.size(); i++) {
+            for (int j = i + 1; j < odd.size(); j++) {
+                edges.add(new Edge(odd.get(i), odd.get(j), graph.getDistance(odd.get(i), odd.get(j))));
+            }
+        }
+        Supplier<Comparator<Edge>> weightComparatorSupplier = () -> Comparator.comparingDouble(Edge::getWeight);
+        Collections.sort(edges, weightComparatorSupplier.get());
+//        Collections.sort(edges);
+        UnionFind uf = new UnionFind(graph.size());
+        List<Edge> matching = new ArrayList<>();
+        for (Edge edge : edges) {
+            if (uf.find(edge.u) != uf.find(edge.v)) {
+                uf.union(edge.u, edge.v);
+                matching.add(edge);
+            }
+        }
+        return matching;
+    }
+
+
+    public List<Edge> createMultigraph(List<Edge> mst, List<Edge> matching) {
+        List<Edge> edges = new ArrayList<>(mst);
+        edges.addAll(matching);
+        return edges;
+    }
+
 }
