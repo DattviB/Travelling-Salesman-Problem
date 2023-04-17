@@ -138,7 +138,7 @@ public class GraphUtils {
         edges.addAll(matching);
         return edges;
     }
-
+    /*
     public List<Integer> findEulerianCircuit(List<Edge> euler) {
         // Create a map to hold the list of neighbors for each vertex
         Map<Integer, List<Integer>> neighbors = new HashMap<>();
@@ -176,15 +176,71 @@ public class GraphUtils {
         Collections.reverse(circuit);
 
         return circuit;
+
     }
+    */
 
-
-    public List<City> convertToHamiltonTour(List<Integer> tour) {
-        List<City> cities = new ArrayList<>();
-        for (int i = 0; i < tour.size(); i++) {
-            cities.add(graph.getCities().get(tour.get(i)));
+    public List<Integer> findEulerianCircuit(List<Edge> euler) {
+        // Create a map to hold the list of neighbors for each vertex
+        Map<Integer, List<Integer>> neighbors = new HashMap<>();
+        for (Edge edge : euler) {
+            int u = edge.getU();
+            int v = edge.getV();
+            neighbors.computeIfAbsent(u, k -> new ArrayList<>()).add(v);
+            neighbors.computeIfAbsent(v, k -> new ArrayList<>()).add(u);
         }
-        return cities;
+        System.out.println(neighbors);
+//        System.out.print(1/0);
+        // Find an arbitrary start vertex
+        int start = euler.get(0).getU();
+
+        // Initialize a stack with the start vertex
+        Stack<Integer> stack = new Stack<>();
+        stack.push(start);
+
+        // Initialize the circuit and visited set
+        List<Integer> circuit = new ArrayList<>();
+        Set<Integer> visited = new HashSet<>();
+
+        while (!stack.isEmpty()) {
+            int u = stack.peek();
+            if (neighbors.containsKey(u) && !neighbors.get(u).isEmpty()) {
+                // Visit the next neighbor of u
+                int v = neighbors.get(u).remove(0);
+                neighbors.get(v).remove(new Integer(u));
+                stack.push(v);
+                // Add the edge to the circuit only if v is not already visited
+                if (!visited.contains(v)) {
+                    circuit.add(u);
+                    visited.add(u);
+                }
+            } else {
+                // Remove u from the stack and add it to the circuit
+                circuit.add(stack.pop());
+            }
+        }
+
+        // Reverse the circuit to get the correct order
+        Collections.reverse(circuit);
+
+        return circuit;
     }
+
+
+    public List<City> convertToHamiltonTour(List<Integer> eulerianCircuit) {
+        Set<Integer> visited = new HashSet<>();
+        List<City> tour = new ArrayList<>();
+        for (int node : eulerianCircuit) {
+            if (!visited.contains(node)) {
+                visited.add(node);
+                tour.add(graph.getCities().get(node));
+            }
+        }
+        // Add the first city again to complete the tour
+        tour.add(graph.getCities().get(eulerianCircuit.get(0)));
+        return tour;
+    }
+
+
 
 }
