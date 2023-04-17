@@ -65,4 +65,21 @@ public class Christofides {
         return tour;
     }
 
+    public double calculateTourDistance(List<City> tour) {
+        double totalDistance = 0.0;
+        Graph graph = new Graph(tour);
+        for (int i = 0; i < tour.size() - 1; i++) {
+            City cityA = tour.get(i);
+            City cityB = tour.get(i + 1);
+            double distance = graph.distance(cityA, cityB);
+            totalDistance += distance;
+        }
+        // Add distance from last city to first city to complete the tour
+        City firstCity = tour.get(0);
+        City lastCity = tour.get(tour.size() - 1);
+        double distance = graph.distance(lastCity, firstCity);
+        totalDistance += distance;
+        return totalDistance;
+    }
+
 }
