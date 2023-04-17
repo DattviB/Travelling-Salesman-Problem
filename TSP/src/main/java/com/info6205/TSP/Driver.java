@@ -42,7 +42,7 @@ public class Driver {
     public static void main(String[] args) {
         List<City> cities = null;
         try {
-            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//crimeSample.csv");
+            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//info6205.spring2023.teamproject.csv");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -50,7 +50,7 @@ public class Driver {
         Christofides christofides = new Christofides(cities);
         christofides.findTour();
         List<City> tour = christofides.getTour();
-
+//        for(City c: tour) System.out.println(c.getId());
         // Calculate the total tour distance in meters
         double totalDistance = christofides.calculateTourDistance(tour);
 
