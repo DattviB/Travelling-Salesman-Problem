@@ -3,6 +3,7 @@ package com.info6205.TSP.algorithms;
 import static org.junit.Assert.*;
 
 
+import com.info6205.TSP.Christofides;
 import com.info6205.TSP.graph.City;
 import com.info6205.TSP.graph.Graph;
 import org.junit.Test;

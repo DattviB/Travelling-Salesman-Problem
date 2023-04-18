@@ -94,7 +94,7 @@ public class Driver {
 //        view.setVisible(true);
 
         ViewTSPAlgo view =  new ViewTSPAlgo();
-        view.viewFinalTour(tour);
+        view.viewFinalTour(hamiltonianTour);
 
 
 

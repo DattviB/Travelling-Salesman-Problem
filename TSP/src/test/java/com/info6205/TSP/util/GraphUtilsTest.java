@@ -36,7 +36,7 @@ public class GraphUtilsTest {
 
         // Call getMinimumSpanningTree() method
         GraphUtils graphUtils = new GraphUtils(graph);
-        List<Edge> mst = graphUtils.getMinimumSpanningTree();
+        List<Edge> mst = graphUtils.getMinimumSpanningTreeKruskals();
 
         // Assert the size of the minimum spanning tree is correct
         assertEquals(3, mst.size());
