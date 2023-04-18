@@ -18,7 +18,7 @@ public class GraphUtils {
 
     //Kruskal's Algo
 
-    public List<Edge> getMinimumSpanningTree() {
+    public List<Edge> getMinimumSpanningTreeKruskals() {
         List<Edge> edges = new ArrayList<>();
         for (int i = 0; i < graph.size(); i++) {
             for (int j = i + 1; j < graph.size(); j++) {
@@ -41,8 +41,8 @@ public class GraphUtils {
 
 
     //Prim's Algorithm
-    /*
-    public List<Edge> getMinimumSpanningTree() {
+
+    public List<Edge> getMinimumSpanningTreePrims() {
         List<Edge> mst = new ArrayList<>();
         boolean[] visited = new boolean[graph.size()];
         double[] distTo = new double[graph.size()];
@@ -73,7 +73,7 @@ public class GraphUtils {
 
         return mst;
     }
-    */
+
 
     public List<Integer> getOddDegreeNodes(List<Edge> mst) {
         // Use the countEdges() method to get a HashMap of the number of incident edges for each city
@@ -139,6 +139,7 @@ public class GraphUtils {
         return edges;
     }
 
+
     public List<Integer> findEulerianCircuit(List<Edge> euler) {
         // Create a map to hold the list of neighbors for each vertex
         Map<Integer, List<Integer>> neighbors = new HashMap<>();
@@ -148,7 +149,8 @@ public class GraphUtils {
             neighbors.computeIfAbsent(u, k -> new ArrayList<>()).add(v);
             neighbors.computeIfAbsent(v, k -> new ArrayList<>()).add(u);
         }
-
+        System.out.println(neighbors);
+//        System.out.print(1/0);
         // Find an arbitrary start vertex
         int start = euler.get(0).getU();
 
@@ -156,8 +158,9 @@ public class GraphUtils {
         Stack<Integer> stack = new Stack<>();
         stack.push(start);
 
-        // Initialize the circuit
+        // Initialize the circuit and visited set
         List<Integer> circuit = new ArrayList<>();
+        Set<Integer> visited = new HashSet<>();
 
         while (!stack.isEmpty()) {
             int u = stack.peek();
@@ -166,6 +169,11 @@ public class GraphUtils {
                 int v = neighbors.get(u).remove(0);
                 neighbors.get(v).remove(new Integer(u));
                 stack.push(v);
+                // Add the edge to the circuit only if v is not already visited
+                if (!visited.contains(v)) {
+                    circuit.add(u);
+                    visited.add(u);
+                }
             } else {
                 // Remove u from the stack and add it to the circuit
                 circuit.add(stack.pop());
@@ -179,12 +187,20 @@ public class GraphUtils {
     }
 
 
-    public List<City> convertToHamiltonTour(List<Integer> tour) {
-        List<City> cities = new ArrayList<>();
-        for (int i = 0; i < tour.size(); i++) {
-            cities.add(graph.getCities().get(tour.get(i)));
+    public List<City> convertToHamiltonTour(List<Integer> eulerianCircuit) {
+        Set<Integer> visited = new HashSet<>();
+        List<City> tour = new ArrayList<>();
+        for (int node : eulerianCircuit) {
+            if (!visited.contains(node)) {
+                visited.add(node);
+                tour.add(graph.getCities().get(node));
+            }
         }
-        return cities;
+        // Add the first city again to complete the tour
+        tour.add(graph.getCities().get(eulerianCircuit.get(0)));
+        return tour;
     }
+
+
 
 }

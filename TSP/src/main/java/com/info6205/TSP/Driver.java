@@ -1,15 +1,16 @@
 package com.info6205.TSP;
 
-import com.info6205.TSP.algorithms.Christofides;
 import com.info6205.TSP.graph.City;
 import com.info6205.TSP.graph.Graph;
+
+import com.info6205.TSP.optimization.tactical.ThreeOptOptimization;
+import com.info6205.TSP.optimization.tactical.TwoOptOptimization;
+
 import com.info6205.TSP.ui.ViewTSPAlgo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Driver {
 
@@ -41,7 +42,7 @@ public class Driver {
         // Skip the first line since it contains the headers
         scanner.nextLine();
         int count = 0;
-        while (scanner.hasNextLine() && count < 5) {
+        while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] fields = line.split(",");
             String name = fields[0];
@@ -60,24 +61,43 @@ public class Driver {
     public static void main(String[] args) {
         List<City> cities = null;
         try {
-            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//cities_sample.csv");
+
+            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//crimeSample.csv");
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         //480
         Christofides christofides = new Christofides(cities);
         christofides.findTour();
-        List<City> tour = christofides.getTour();
-
+        List<City> hamiltonianTour = christofides.getTour();
+//        for(City c: tour) System.out.println(c.getId());
         // Calculate the total tour distance in meters
-        double totalDistance = calculateTourDistance(tour);
+        double totalHamiltonianDistance = christofides.calculateTourDistance(hamiltonianTour);
 
         // Print the tour and total distance
 //        System.out.println("Tour: " + tour);
-        System.out.println("Total Distance: " + totalDistance + " meters");
+//        System.out.println("Total Distance: " + totalDistance + " meters");
 
-        ViewTSPAlgo view =  new ViewTSPAlgo(tour);
-        view.setVisible(true);
+
+
+        List<City> twoOptTour = TwoOptOptimization.twoOpt(hamiltonianTour);
+        double totalTwoOptDistance = calculateTourDistance(twoOptTour);
+        System.out.println("Total Two Opt Distance: " + totalTwoOptDistance + " meters");
+
+//        ThreeOptOptimization threeOpt = new ThreeOptOptimization(tour);
+//        threeOpt.threeOpt();
+
+//        RandomSwapping randomSwap = new RandomSwapping(tour);
+//        randomSwap.randomSwap();
+//        ViewTSPAlgo view =  new ViewTSPAlgo(tour);
+//        view.setVisible(true);
+
+        ViewTSPAlgo view =  new ViewTSPAlgo();
+        view.viewFinalTour(tour);
+
+
+
 
     }
 
