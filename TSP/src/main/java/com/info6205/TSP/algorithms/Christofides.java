@@ -16,7 +16,6 @@ public class Christofides {
     }
 
     public void findTour(){
-        System.out.println("Graph:" + graph.getAdjacencyMatrix());
         // find minimum spanning tree
         GraphUtils graphUtils = new GraphUtils(graph);
 
@@ -59,8 +58,8 @@ public class Christofides {
 
         // convert euler tour to hamiltonian tour
         this.tour = graphUtils.convertToHamiltonTour(eulerianCircuit);
-        for(City c: tour)
-            System.out.println("Tour: " + c.getId());
+//        for(City c: tour)
+//            System.out.println("Tour: " + c.getId());
     }
     public List<City> getTour() {
         return tour;
