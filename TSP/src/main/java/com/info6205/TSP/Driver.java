@@ -2,8 +2,11 @@ package com.info6205.TSP;
 
 import com.info6205.TSP.graph.City;
 import com.info6205.TSP.graph.Graph;
+
 import com.info6205.TSP.optimization.tactical.ThreeOptOptimization;
 import com.info6205.TSP.optimization.tactical.TwoOptOptimization;
+
+import com.info6205.TSP.ui.ViewTSPAlgo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -58,7 +61,9 @@ public class Driver {
     public static void main(String[] args) {
         List<City> cities = null;
         try {
-            cities = readCitiesFromFile("/Users/vipulrajderkar/MSIS/PSA/PSA_FinalProject/TSP/src/main/java/com/info6205/TSP/data/info6205.spring2023.teamproject.csv");
+
+            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//crimeSample.csv");
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -75,6 +80,7 @@ public class Driver {
 //        System.out.println("Total Distance: " + totalDistance + " meters");
 
 
+
         List<City> twoOptTour = TwoOptOptimization.twoOpt(hamiltonianTour);
         double totalTwoOptDistance = calculateTourDistance(twoOptTour);
         System.out.println("Total Two Opt Distance: " + totalTwoOptDistance + " meters");
@@ -86,6 +92,11 @@ public class Driver {
 //        randomSwap.randomSwap();
 //        ViewTSPAlgo view =  new ViewTSPAlgo(tour);
 //        view.setVisible(true);
+
+        ViewTSPAlgo view =  new ViewTSPAlgo();
+        view.viewFinalTour(tour);
+
+
 
 
     }
