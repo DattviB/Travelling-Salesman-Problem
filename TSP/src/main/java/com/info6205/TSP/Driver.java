@@ -22,7 +22,7 @@ public class Driver {
         // Skip the first line since it contains the headers
         scanner.nextLine();
         int count = 0;
-        while (scanner.hasNextLine()) {
+        while (scanner.hasNextLine() && count < 15) {
             String line = scanner.nextLine();
             String[] fields = line.split(",");
             String name = fields[0];
@@ -41,7 +41,7 @@ public class Driver {
     public static void main(String[] args) {
         List<City> cities = null;
         try {
-            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//crimeSample.csv");
+            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//cities_sample.csv");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -51,7 +51,7 @@ public class Driver {
         List<City> tour = christofides.getTour();
 //        for(City c: tour) System.out.println(c.getId());
         // Calculate the total tour distance in meters
-        double totalDistance = christofides.calculateTourDistance(tour);
+        double totalDistance = calculateTourDistance(tour);
 
         // Print the tour and total distance
 //        System.out.println("Tour: " + tour);
@@ -61,6 +61,40 @@ public class Driver {
         view.viewFinalTour(tour);
 
 
+    }
+
+    public static double calculateTourDistance(List<City> tour) {
+        double totalDistance = 0.0;
+//        Graph graph = new Graph(tour);
+        for (int i = 0; i < tour.size() - 1; i++) {
+            City cityA = tour.get(i);
+            City cityB = tour.get(i + 1);
+            double distance = distance(cityA, cityB);
+            System.out.println(distance);
+            totalDistance += distance;
+        }
+        // Add distance from last city to first city to complete the tour
+//        City firstCity = tour.get(0);
+//        City lastCity = tour.get(tour.size() - 1);
+//        double distance = distance(lastCity, firstCity);
+//        totalDistance += distance;
+        return totalDistance;
+    }
+
+    public static double distance(City c1, City c2) {
+        double lat1 = c1.getLattitude();
+        double lon1 = c1.getLongitude();
+        double lat2 = c2.getLattitude();
+        double lon2 = c2.getLongitude();
+        double earthRadius = 6371000; // meters
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = earthRadius * c;
+        return distance;
     }
 
 }
