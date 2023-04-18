@@ -3,22 +3,15 @@ package com.info6205.TSP.algorithms;
 import static org.junit.Assert.*;
 
 
-import java.io.IOException;
-
-import com.info6205.TSP.algorithms.Christofides;
+import com.info6205.TSP.Christofides;
 import com.info6205.TSP.graph.City;
 import com.info6205.TSP.graph.Graph;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.info6205.TSP.util.*;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-import com.info6205.TSP.util.*;
 import org.junit.jupiter.api.Assertions;
 
 public class Christofides_Test {
