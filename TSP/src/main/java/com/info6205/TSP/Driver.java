@@ -4,7 +4,6 @@ import com.info6205.TSP.algorithms.Christofides;
 import com.info6205.TSP.graph.City;
 import com.info6205.TSP.graph.Graph;
 import com.info6205.TSP.ui.ViewTSPAlgo;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class Driver {
     public static void main(String[] args) {
         List<City> cities = null;
         try {
-            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//info6205.spring2023.teamproject.csv");
+            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//crimeSample.csv");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -58,8 +57,9 @@ public class Driver {
 //        System.out.println("Tour: " + tour);
         System.out.println("Total Distance: " + totalDistance + " meters");
 
-//        ViewTSPAlgo view =  new ViewTSPAlgo(tour);
-//        view.setVisible(true);
+        ViewTSPAlgo view =  new ViewTSPAlgo();
+        view.viewFinalTour(tour);
+
 
     }
 

@@ -1,139 +1,99 @@
 package com.info6205.TSP.ui;
 
 import com.info6205.TSP.graph.City;
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.spriteManager.Sprite;
+import org.graphstream.ui.spriteManager.SpriteManager;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class ViewTSPAlgo extends JFrame {
-
-    private JPanel mapPanel;
-    private JButton startButton;
-    private List<City> points; // Array of points with latitude and longitude
-    private Set<Integer> completedLines = new HashSet<>(); // Set to keep track of completed lines
-    private Timer timer; // Timer for animation
-    private int currentLine = -1; // Current line being drawn
-    Graphics2D g2d;
-    public ViewTSPAlgo(List<City> locations) {
-        setTitle("Map App");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
-
-        mapPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                drawPointsAndLines(g); // Method to draw points and lines on the panel
-                points = new ArrayList<>(locations);
-                if (!timer.isRunning() && currentLine >= points.size() - 1) {
-                    // Draw black lines after the timer is stopped and animation is complete
-                    g.setColor(Color.BLACK);
-                    for (int i = 0; i < points.size(); i++) {
-                        int x1 = (int) ((points.get(i).getLongitude() + 270) * mapPanel.getWidth() / 360);
-                        int y1 = (int) ((90 - points.get(i).getLattitude()) * mapPanel.getHeight() / 180);
-                        int nextIndex = (i + 1) % points.size(); // Get the index of the next point
-                        int x2 = (int) ((points.get(nextIndex).getLongitude() + 270) * mapPanel.getWidth() / 360);
-                        int y2 = (int) ((90 - points.get(nextIndex).getLattitude()) * mapPanel.getHeight() / 180);
-                        g.drawLine(x1, y1, x2, y2); // Draw a black line
-                    }
-                }
-            }
-        };
-        //viewFinalGraph(Graphics g);
-        add(mapPanel, BorderLayout.CENTER);
-
-        startButton = new JButton("Start");
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Method to start the server and get points with latitude and longitude
-                points = new ArrayList<>(locations);
-                // Initialize city names array
-                //cityNames = new String[]{"Boston","New York City", "Washington DC", "Houston","Chicago"};
-                currentLine = 0; // Reset current line
-                if (points != null) {
-                    // Start the timer for animation
-                    animatePoints();
-                }
-            }
-        });
-        add(startButton, BorderLayout.SOUTH);
-
-        // Timer for animation with delay of 500 milliseconds
-        timer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Increment current line
-                currentLine++;
-                // Repaint the panel to update the animation
-                mapPanel.repaint();
-                // Stop the timer when all lines are drawn
-                if (currentLine >= points.size()) {
-                    timer.stop();
-                }
-            }
-        });
-
-    }
-
-    private void drawPointsAndLines(Graphics g) {
-        if (points != null) {
-            for (int i = 0; i < points.size(); i++) {
-                // Convert latitude and longitude to x and y coordinates on the panel
-                int x1 = (int) ((points.get(i).getLongitude() + 270) * mapPanel.getWidth() / 360);
-                int y1 = (int) ((90 - points.get(i).getLattitude()) * mapPanel.getHeight() / 180);
-                g.setColor(Color.RED);
-                g.fillOval(x1 - 5, y1 - 5, 10, 10); // Draw a red circle for each point
-                g.drawString(points.get(i).getId(), x1, y1); // Draw city name next to the point
-            }
-
-
-
-            // Draw animated lines for the current line being drawn
-            if (currentLine >= 0 && currentLine < points.size()) {
-                int x1 = (int) ((points.get(currentLine).getLongitude() + 270) * mapPanel.getWidth() / 360);
-                int y1 = (int) ((90 - points.get(currentLine).getLattitude()) * mapPanel.getHeight() / 180);
-                int nextIndex = (currentLine + 1) % points.size(); // Get the index of the next point
-                int x2 = (int) ((points.get(nextIndex).getLongitude() + 270) * mapPanel.getWidth() / 360);
-                int y2 = (int) ((90 - points.get(nextIndex).getLattitude()) * mapPanel.getHeight() / 180);
-                g2d = (Graphics2D) g;
-                g2d.setStroke(new BasicStroke(2)); // Set thicker stroke for animated line
-                g2d.setColor(Color.BLUE);
-                g2d.drawLine(x1, y1, x2, y2); // Draw an animated blue line for the current line
-
-            }
-
-        }
-    }
-
-    private void animatePoints() {
-        // Start the timer for animation
-        timer.start();
-    }
-
-    private City[] startServerAndGetPoints() {
-        // Method to start the server and get points with latitude and longitude
-        // Replace with your own implementation to fetch points from the server
-        // and convert them into Point objects with latitude and longitude
-
-
-        City[] points = new City[6];
-        points[0] = new City("1",40.7128, -74.0060 ); // New York City
-        points[1] = new City("2",34.0522, -118.2437); // Los Angeles
-        points[2] = new City("3",29.7604, -95.3698); // Houston
-        points[3] = new City("4",30.2500, -97.7500); // Austin
-        points[4] = new City("5",41.8781, -87.6298); // Chicago
-        points[5] = new City("6",40.7128, -74.0060); // NY
-        return points;
-    }
+public class ViewTSPAlgo {
+    private List<City> points;
+    private Graph graph;
+    private SpriteManager spriteManager;
+    private Timer timer;
+    private int currentEdgeIndex;
 
     public static void main(String[] args) {
 
+    }
+
+    public void viewFinalTour(List<City> locations) {
+        points = new ArrayList<>(locations);
+
+        System.setProperty("org.graphstream.ui", "swing");
+        graph = new SingleGraph("TSP Visualization");
+        spriteManager = new SpriteManager(graph);
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            City city = points.get(i);
+            String nodeId = city.getId(); // Unique ID for each node
+
+            if (nodeId.length() > 5) {
+                nodeId = nodeId.substring(nodeId.length() - 5);
+                points.get(i).setId(nodeId);
+            }
+            Node node = graph.addNode(nodeId);
+            node.setAttribute("layout.frozen");
+            node.setAttribute("x", city.getLattitude());
+            node.setAttribute("y", city.getLongitude());
+
+            Sprite sprite = spriteManager.addSprite("s_" + nodeId);
+            sprite.attachToNode(nodeId);
+            sprite.setAttribute("ui.label", nodeId);
+            sprite.setAttribute("ui.style", "shape:circle; fill-color:blue; size:10px;");
+        }
+
+        // Modify the loop that adds edges
+        for (int i = 0; i < points.size() - 1; i++) {
+            String sourceNodeId = points.get(i).getId();
+            String targetNodeId = points.get((i + 1) % points.size()).getId();
+
+            String edgeId = points.get(i).getId();
+
+            // Use Timer to add a delay between each edge addition
+            currentEdgeIndex = 0;
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // Add edge
+                    Edge edge = graph.addEdge(edgeId, sourceNodeId, targetNodeId);
+                    edge.setAttribute("ui.label", edge.getId());
+                    edge.setAttribute("ui.style", "fill-color:red; size: 2px;");
+                }
+            }, i * 300); // Change the delay time as needed (in milliseconds)
+        }
+
+        graph.display();
+
+//        currentEdgeIndex = 0;
+//        timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if (currentEdgeIndex < points.size() - 1) {
+//                    String edgeId = points.get(currentEdgeIndex).getId();
+//                    Edge edge = graph.getEdge(edgeId);
+//                    if (edge != null) {
+//                        edge.setAttribute("ui.style", "fill-color:red; size: 2px; ");
+//                    }
+//                    currentEdgeIndex++;
+//                } else {
+//                    timer.cancel();
+//                    timer.purge();
+//                }
+//            }
+//        }, 500, 500);
     }
 
 }
