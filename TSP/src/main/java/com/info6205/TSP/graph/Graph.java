@@ -46,4 +46,13 @@ public class Graph {
     public List<City> getCities() {
         return cities;
     }
+
+    public void addEdge(int u, int v, double weight) {
+        adjacencyMatrix.get(u).set(v, weight);
+        adjacencyMatrix.get(v).set(u, weight);
+    }
+
+    public List<List<Double>> getAdjacencyMatrix(){
+        return adjacencyMatrix;
+    }
 }

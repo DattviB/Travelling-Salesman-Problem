@@ -45,4 +45,14 @@ public class UnionFind {
         }
         return count;
     }
+    public boolean isConnected() {
+        int root = find(0);
+        for (int i = 1; i < parent.length; i++) {
+            if (find(i) != root) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

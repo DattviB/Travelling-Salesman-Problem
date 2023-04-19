@@ -1,9 +1,9 @@
 package com.info6205.TSP;
 
+import com.info6205.TSP.algorithms.Christofides;
 import com.info6205.TSP.graph.City;
 import com.info6205.TSP.graph.Graph;
 
-import com.info6205.TSP.optimization.tactical.ThreeOptOptimization;
 import com.info6205.TSP.optimization.tactical.TwoOptOptimization;
 
 import com.info6205.TSP.ui.ViewTSPAlgo;
@@ -62,7 +62,7 @@ public class Driver {
         List<City> cities = null;
         try {
 
-            cities = readCitiesFromFile("TSP//src//main//java//com//info6205//TSP//data//crimeSample.csv");
+            cities = readCitiesFromFile("TSP/src/main/java/com/info6205/TSP/data/info6205.spring2023.teamproject.csv");
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -71,21 +71,18 @@ public class Driver {
         Christofides christofides = new Christofides(cities);
         christofides.findTour();
         List<City> hamiltonianTour = christofides.getTour();
-//        for(City c: tour) System.out.println(c.getId());
-        // Calculate the total tour distance in meters
-        double totalHamiltonianDistance = christofides.calculateTourDistance(hamiltonianTour);
-
-        // Print the tour and total distance
-//        System.out.println("Tour: " + tour);
-//        System.out.println("Total Distance: " + totalDistance + " meters");
-
 
 
         List<City> twoOptTour = TwoOptOptimization.twoOpt(hamiltonianTour);
         double totalTwoOptDistance = calculateTourDistance(twoOptTour);
-        System.out.println("Total Two Opt Distance: " + totalTwoOptDistance + " meters");
+        System.out.println("Total Two Opt Distance: " + totalTwoOptDistance +" meters");
 
-//        ThreeOptOptimization threeOpt = new ThreeOptOptimization(tour);
+//        christofides.geneticAlgo();
+
+//        christofides.antColony();
+//        double totalDistance2 = christofides.calculateTourDistance(hamiltonianTour);
+//        System.out.println("ACO Total Distance: " + totalDistance2 + " meters");
+//        ThreeOptOptimization threeOpt = new ThreeOptOptimization(hamiltonianTour);
 //        threeOpt.threeOpt();
 
 //        RandomSwapping randomSwap = new RandomSwapping(tour);
@@ -94,7 +91,7 @@ public class Driver {
 //        view.setVisible(true);
 
         ViewTSPAlgo view =  new ViewTSPAlgo();
-        view.viewFinalTour(tour);
+        view.viewFinalTour(hamiltonianTour);
 
 
 

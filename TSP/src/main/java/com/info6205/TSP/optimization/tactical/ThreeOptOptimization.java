@@ -1,8 +1,6 @@
 package com.info6205.TSP.optimization.tactical;
 
-import com.info6205.TSP.Christofides;
 import com.info6205.TSP.graph.City;
-import com.info6205.TSP.graph.Graph;
 
 import java.util.*;
 
@@ -22,7 +20,7 @@ public class ThreeOptOptimization {
         for (int i = 0; i < tour.size(); i++) {
             cityToIndex.put(tour.get(i), i);
         }
-        int maxIterations = 100000;
+        int maxIterations = 1000;
         while (improvement == 0 && count < maxIterations) {
             improvement = 1;
             for (int i = 0; i < tour.size() - 2; i++) {

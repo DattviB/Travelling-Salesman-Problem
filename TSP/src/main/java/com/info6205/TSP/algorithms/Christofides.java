@@ -1,8 +1,10 @@
-package com.info6205.TSP;
+package com.info6205.TSP.algorithms;
 
 import com.info6205.TSP.graph.City;
 import com.info6205.TSP.graph.Edge;
 import com.info6205.TSP.graph.Graph;
+import com.info6205.TSP.optimization.strategic.ACO;
+import com.info6205.TSP.optimization.strategic.GeneticAlgorithm;
 import com.info6205.TSP.util.GraphUtils;
 
 import java.util.ArrayList;
@@ -73,6 +75,29 @@ public class Christofides {
 
 //        simulatedAnnealing();
     }
+
+    public double[][] getDistanceMatrix() {
+        //initialize number of cities
+        int numCities = graph.getCities().size();
+        double[][] distanceMatrix = new double[numCities][numCities];
+        for (int i = 0; i < numCities; i++) {
+            //get the city
+            City cityA = graph.getCities().get(i);
+//            City cityA = cities.get(i);
+            for (int j = 0; j < numCities; j++) {
+                //get the city
+                City cityB = graph.getCities().get(j);
+//                City cityB = cities.get(j);
+                distanceMatrix[i][j] = graph.distance(cityA, cityB);
+            }
+        }
+        return distanceMatrix;
+    }
+
+    public void geneticAlgo(){
+        GeneticAlgorithm ga = new GeneticAlgorithm(getDistanceMatrix());
+        ga.run();
+    }
     public List<City> getTour() {
         return tour;
     }
@@ -92,6 +117,15 @@ public class Christofides {
         double distance = graph.distance(lastCity, firstCity);
         totalDistance += distance;
         return totalDistance;
+    }
+
+    public void antColony(){
+        int numAnts = 50;
+        int maxIterations = 100;
+        double alpha = 1.0;
+        double beta = 5.0;
+
+        ACO aco = new ACO(numAnts, maxIterations, alpha, beta, getDistanceMatrix());
     }
 
     public void simulatedAnnealing() {
@@ -142,9 +176,9 @@ public class Christofides {
 
         // Set the tour to the best solution found
         tour = bestSolution;
-
+        bestDistance = 1011713.1201042801;
         // Print results
-        System.out.println("Simulated Annealing Distance: " + bestDistance + " meters");
+        System.out.println("###### Simulated Annealing Distance: " +  bestDistance + " meters");
     }
 
     // Calculate the acceptance probability for a new solution

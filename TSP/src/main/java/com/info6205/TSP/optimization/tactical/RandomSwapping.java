@@ -1,6 +1,6 @@
 package com.info6205.TSP.optimization.tactical;
 
-import com.info6205.TSP.Christofides;
+import com.info6205.TSP.algorithms.Christofides;
 import com.info6205.TSP.graph.City;
 import com.info6205.TSP.graph.Graph;
 

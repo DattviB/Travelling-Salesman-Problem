@@ -9,103 +9,96 @@ public class TwoOptOptimization {
     public static List<City> twoOpt(List<City> cities) {
         int n = cities.size();
         List<City> newCities = new ArrayList<>(cities);
-        boolean improved = true;
 
-        int maxIterations = 10000;
+        boolean improved = true;
         int iterationCount = 0;
-        while (improved && iterationCount < maxIterations) {
+        int maxIterations = 2000;
+        int maxNonImprovingIterations = 100;
+        int nonImprovingIterations = 0;
+
+        while (improved && iterationCount < maxIterations && nonImprovingIterations < maxNonImprovingIterations) {
             improved = false;
-            for (int i = 0; i < n - 2; i++) {
-                for (int j = i + 2; j < n; j++) {
-                    double d1 = distance(cities.get(i), cities.get(i + 1)) + distance(cities.get(j), cities.get((j + 1) % n));
-                    double d2 = distance(cities.get(i), cities.get(j)) + distance(cities.get(i + 1), cities.get((j + 1) % n));
-                    if (d1 > d2) {
-                        reverse(newCities, i + 1, j);
-                        improved = true;
-                    }
+
+            List<int[]> pairs = generatePairs(n, 5);
+            // Generate pairs of cities to optimize
+            // List<int[]> pairs = generatePairs(n);
+
+            for (int[] pair : pairs) {
+                int i = pair[0];
+                int j = pair[1];
+
+                // Calculate the new distance after reversing the path between cities i+1 and j
+                double d1 = distance(newCities.get(i), newCities.get(i + 1)) + distance(newCities.get(j), newCities.get((j + 1) % n));
+                double d2 = distance(newCities.get(i), newCities.get(j)) + distance(newCities.get(i + 1), newCities.get((j + 1) % n));
+
+                if (d1 > d2) {
+                    // Reverse the path between cities i+1 and j
+                    reverse(newCities, i + 1, j);
+                    improved = true;
+                    nonImprovingIterations = 0;
                 }
             }
+
             iterationCount++;
+
+            // Check if the tour has improved
+            if (!improved) {
+                nonImprovingIterations++;
+            }
         }
+
         return newCities;
     }
 
-    private static void reverse(List<City> cities, int i, int j) {
-        while (i < j) {
-            City temp = cities.get(i);
-            cities.set(i, cities.get(j));
-            cities.set(j, temp);
-            i++;
-            j--;
+    private static void reverse(List<City> list, int start, int end) {
+        while (start < end) {
+            City temp = list.get(start);
+            list.set(start, list.get(end));
+            list.set(end, temp);
+            start++;
+            end--;
         }
     }
 
-//    public static List<City> twoOpt(List<City> cities) {
-//
-//        City[] cityArray = cities.toArray(new City[cities.size()]);
-//        int n = cityArray.length;
-//        City[] newCities = Arrays.copyOf(cityArray, n);
-//        boolean improved = true;
-//        double[][] distances = precomputeDistances(cityArray);
-//
-//        int maxIterations = 10000;
-//        int iterationCount = 0;
-//        while (improved && iterationCount < maxIterations) {
-//            improved = false;
-//            List<int[]> pairs = generatePairs(n);
-//            for (int[] pair : pairs) {
-//                int i = pair[0];
-//                int j = pair[1];
-//                double d1 = distances[i][i + 1] + distances[j][((j + 1) % n)];
-//                double d2 = distances[i][j] + distances[i + 1][((j + 1) % n)];
-//                if (d1 > d2) {
-//                    reverse(newCities, i + 1, j);
-//                    improved = true;
-//                }
-//            }
-//            iterationCount++;
-//        }
-//
-////        City[] cityArray = new City[10]; // initialize the array with cities
-//        List<City> newCityList = Arrays.asList(newCities);
-//        return newCityList;
-//    }
-//
-//    private static double[][] precomputeDistances(City[] cities) {
-//        int n = cities.length;
-//        double[][] distances = new double[n][n];
-//        for (int i = 0; i < n; i++) {
-//            for (int j = i + 1; j < n; j++) {
-//                double distance = distance(cities[i], cities[j]);
-//                distances[i][j] = distance;
-//                distances[j][i] = distance;
-//            }
-//        }
-//        return distances;
-//    }
-//
-//    private static List<int[]> generatePairs(int n) {
+
+
+//    private static List<int[]> generatePairs(int n, int numPairs) {
 //        List<int[]> pairs = new ArrayList<>();
-//        Random rand = new Random();
-//        for (int i = 0; i < n - 2; i++) {
-//            for (int j = i + 2; j < n; j++) {
-//                if (rand.nextBoolean()) {
-//                    pairs.add(new int[]{i, j});
-//                }
+//        Random random = new Random();
+//        for (int i = 0; i < numPairs; i++) {
+//            int j = random.nextInt(n);
+//            int k = random.nextInt(n - 1);
+//            if (k >= j) {
+//                k++;
 //            }
+//            pairs.add(new int[]{j, k});
 //        }
 //        return pairs;
 //    }
-//
-//    private static void reverse(City[] cities, int i, int j) {
-//        while (i < j) {
-//            City temp = cities[i];
-//            cities[i] = cities[j];
-//            cities[j] = temp;
-//            i++;
-//            j--;
-//        }
-//    }
+
+    private static List<int[]> generatePairs(int n, int k) {
+        List<int[]> pairs = new ArrayList<>();
+        Random rand = new Random();
+
+        // Generate pairs of adjacent cities
+        for (int i = 0; i < n - 1; i++) {
+            pairs.add(new int[]{i, i + 1});
+        }
+
+        // Generate pairs of non-adjacent cities using the k-opt heuristic
+        for (int i = 0; i < n - k; i++) {
+            int[] pair = new int[k];
+            pair[0] = i;
+            for (int j = 1; j < k; j++) {
+                pair[j] = (i + j) % n;
+            }
+            pairs.add(pair);
+        }
+
+        return pairs;
+    }
+
+
     public static double distance(City c1, City c2) {
         double lat1 = c1.getLattitude();
         double lon1 = c1.getLongitude();
@@ -121,6 +114,8 @@ public class TwoOptOptimization {
         double distance = earthRadius * c;
         return distance;
     }
+
+
 
 
 }

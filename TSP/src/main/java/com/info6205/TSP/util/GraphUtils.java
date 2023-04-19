@@ -149,9 +149,8 @@ public class GraphUtils {
             neighbors.computeIfAbsent(u, k -> new ArrayList<>()).add(v);
             neighbors.computeIfAbsent(v, k -> new ArrayList<>()).add(u);
         }
-        System.out.println(neighbors);
-//        System.out.print(1/0);
-        // Find an arbitrary start vertex
+
+
         int start = euler.get(0).getU();
 
         // Initialize a stack with the start vertex
